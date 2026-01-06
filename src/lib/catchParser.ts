@@ -8,10 +8,10 @@ export function parseCatchString(text: string): ParsedCatch {
     const cleanText = text.trim();
 
     // 1. Extract Weight (Start/End/Middle)
-    // Matches: 20kg, 20.5 kg, 20 kilos, 20 lbs, 20pounds, 20
+    // Matches: 20kg, 20.5 kg, 20 kilos, 20 lbs, 20pounds, 500g, 500 grams, 20
     // Group 1: Number
     // Group 3: Unit (optional)
-    const weightRegex = /(\d+(?:\.\d+)?)\s*(kg|kilos|lbs|pounds|pound|kilo)?/i;
+    const weightRegex = /(\d+(?:\.\d+)?)\s*(kg|kilos|lbs|pounds|pound|kilo|g|grams|gram)?/i;
     const weightMatch = cleanText.match(weightRegex);
 
     let weight: number | null = null;
@@ -24,6 +24,8 @@ export function parseCatchString(text: string): ParsedCatch {
         // Normalize to kg
         if (unit === 'lbs' || unit === 'pounds' || unit === 'pound') {
             weight = parseFloat((value * 0.453592).toFixed(2));
+        } else if (unit === 'g' || unit === 'grams' || unit === 'gram') {
+            weight = value / 1000;
         } else {
             weight = value;
         }

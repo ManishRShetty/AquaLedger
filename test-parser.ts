@@ -7,7 +7,7 @@ const testCases = [
     { input: "Jack of all Trades 5kg", expected: { species: "Jack of all Trades", weight: 5 } },
     { input: "Catch of the Day 10 lbs", expected: { species: "Catch of the Day", weight: 4.54 } }, // 10 * 0.453592 = 4.53592 -> 4.54
     { input: "Sea of Galilee Tilapia 2kg", expected: { species: "Sea of Galilee Tilapia", weight: 2 } },
-    { input: "500 grams sardines", expected: { species: "500 grams sardines", weight: null } }, // Unit not supported yet, should fall back gracefully
+    { input: "500 grams sardines", expected: { species: "Sardines", weight: 0.5 } }, // Normalizes to 0.5kg
     { input: "Just a fish", expected: { species: "Just a fish", weight: null } },
 ];
 
