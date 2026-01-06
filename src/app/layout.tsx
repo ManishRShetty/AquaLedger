@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { CatchProvider } from '@/context/CatchContext';
 import { Toaster } from "@/components/ui/toaster"
 import { ReactQueryProvider } from '@/providers/ReactQueryProvider';
+import { SyncStatus } from '@/components/ui/SyncStatus';
 
 export const metadata: Metadata = {
   title: 'AquaLedger',
@@ -24,12 +24,11 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased">
         <ReactQueryProvider>
-          <CatchProvider>
-            <AppLayout>
-              {children}
-              <Toaster />
-            </AppLayout>
-          </CatchProvider>
+          <AppLayout>
+            {children}
+            <SyncStatus />
+            <Toaster />
+          </AppLayout>
         </ReactQueryProvider>
       </body>
     </html>

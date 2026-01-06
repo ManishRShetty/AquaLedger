@@ -73,25 +73,30 @@ export function CatchLogger() {
         });
     };
 
+
     return (
-        <Card className="w-full max-w-md bg-zinc-900/50 backdrop-blur-md border-white/10 shadow-xl">
-            <CardHeader>
-                <CardTitle className="text-2xl font-bold text-white">Log Catch</CardTitle>
+        <Card className="w-full max-w-md bg-zinc-900/80 backdrop-blur-2xl border-white/5 shadow-2xl relative overflow-hidden">
+            {/* Subtle Gradient Glow */}
+            <div className="absolute -top-20 -right-20 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+
+            <CardHeader className="relative z-10">
+                <CardTitle className="text-3xl font-bold text-white tracking-tight">Log Catch</CardTitle>
+                <p className="text-zinc-500 text-sm">Speak or type your catch details</p>
             </CardHeader>
-            <CardContent>
+            <CardContent className="relative z-10">
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-zinc-400">Species</label>
+                        <label className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Species</label>
                         <Input
                             value={species}
                             onChange={(e) => setSpecies(e.target.value)}
                             placeholder="e.g. Mackerel"
-                            className="h-12 bg-black/40 border-white/5 text-lg text-white placeholder:text-zinc-600 focus-visible:ring-indigo-500"
+                            className="h-14 bg-white/5 border-white/10 text-xl text-white placeholder:text-zinc-700 focus-visible:ring-indigo-500/50 rounded-xl backdrop-blur-sm"
                         />
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-zinc-400">Weight (kg)</label>
+                        <label className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Weight (kg)</label>
                         <Input
                             ref={weightInputRef}
                             type="number"
@@ -99,46 +104,48 @@ export function CatchLogger() {
                             value={weight}
                             onChange={(e) => setWeight(e.target.value)}
                             placeholder="0.00"
-                            className="h-12 bg-black/40 border-white/5 text-lg text-white placeholder:text-zinc-600 focus-visible:ring-indigo-500"
+                            className="h-14 bg-white/5 border-white/10 text-xl text-white placeholder:text-zinc-700 focus-visible:ring-indigo-500/50 rounded-xl backdrop-blur-sm"
                         />
                     </div>
 
-                    <div className="flex gap-4 pt-4">
+                    <div className="flex gap-4 pt-6 items-center">
                         {hasSupport && (
-                            <button
+                            <motion.button
                                 type="button"
+                                whileTap={{ scale: 0.95 }}
+                                whileHover={{ scale: 1.05 }}
                                 onClick={isListening ? stopListening : startListening}
                                 className={`
-                    relative flex items-center justify-center w-16 h-16 rounded-full transition-all duration-300
-                    ${isListening ? 'bg-red-500/20 text-red-400 shadow-[0_0_20px_rgba(239,68,68,0.4)]' : 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg'}
+                    relative flex items-center justify-center w-20 h-20 rounded-full transition-all duration-300
+                    ${isListening ? 'bg-red-500/20 text-red-500 shadow-[0_0_30px_rgba(239,68,68,0.3)]' : 'bg-indigo-600 text-white shadow-xl hover:bg-indigo-500'}
                 `}
                             >
                                 <AnimatePresence mode='wait'>
                                     {isListening ? (
                                         <motion.div
                                             key="wave"
-                                            className="absolute inset-0 rounded-full border-2 border-red-500"
+                                            className="absolute inset-0 rounded-full border border-red-500"
                                             initial={{ scale: 1, opacity: 1 }}
-                                            animate={{ scale: 1.5, opacity: 0 }}
-                                            transition={{ repeat: Infinity, duration: 1.5 }}
+                                            animate={{ scale: 1.8, opacity: 0 }}
+                                            transition={{ repeat: Infinity, duration: 2, ease: "easeOut" }}
                                         />
                                     ) : null}
                                 </AnimatePresence>
                                 <Mic className={`w-8 h-8 ${isListening ? 'animate-pulse' : ''}`} />
-                            </button>
+                            </motion.button>
                         )}
 
                         <Button
                             type="submit"
-                            className="flex-1 h-16 text-lg font-semibold bg-white text-black hover:bg-zinc-200 transition-colors"
-                            disabled={logCatchMutation.isPending}
+                            className="flex-1 h-20 text-xl font-bold bg-white text-black hover:bg-zinc-200 transition-all rounded-2xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={logCatchMutation.isPending || (!species && !weight)}
                         >
                             {logCatchMutation.isPending ? (
-                                <Loader2 className="w-6 h-6 animate-spin mr-2" />
+                                <Loader2 className="w-8 h-8 animate-spin mr-3" />
                             ) : (
-                                <Save className="w-6 h-6 mr-2" />
+                                <Save className="w-8 h-8 mr-3" />
                             )}
-                            Log Catch
+                            Save Catch
                         </Button>
                     </div>
 
@@ -146,13 +153,13 @@ export function CatchLogger() {
                     <AnimatePresence>
                         {isListening && (
                             <motion.div
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: 10 }}
-                                className="text-center"
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                exit={{ opacity: 0, height: 0 }}
+                                className="text-center overflow-hidden"
                             >
-                                <p className="text-sm font-mono text-zinc-400 animate-pulse">
-                                    {transcript || "Listening..."}
+                                <p className="text-sm font-mono text-indigo-400 animate-pulse pt-2">
+                                    "{transcript || "Listening..."}"
                                 </p>
                             </motion.div>
                         )}

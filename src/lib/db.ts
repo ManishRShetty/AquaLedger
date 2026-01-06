@@ -6,6 +6,8 @@ export interface Catch {
     weight: number;
     timestamp: number;
     syncStatus: 'pending' | 'synced' | 'error';
+    score?: number;
+    rationale?: string;
 }
 
 export interface SyncOperation {
