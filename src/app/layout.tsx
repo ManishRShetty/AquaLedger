@@ -3,6 +3,7 @@ import './globals.css';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { CatchProvider } from '@/context/CatchContext';
 import { Toaster } from "@/components/ui/toaster"
+import { ReactQueryProvider } from '@/providers/ReactQueryProvider';
 
 export const metadata: Metadata = {
   title: 'AquaLedger',
@@ -22,12 +23,14 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"></link>
       </head>
       <body className="font-body antialiased">
-        <CatchProvider>
-          <AppLayout>
-            {children}
-            <Toaster />
-          </AppLayout>
-        </CatchProvider>
+        <ReactQueryProvider>
+          <CatchProvider>
+            <AppLayout>
+              {children}
+              <Toaster />
+            </AppLayout>
+          </CatchProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   );
