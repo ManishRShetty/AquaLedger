@@ -1,4 +1,5 @@
 import { Navbar } from "@/components/layout/Navbar";
+import { ConflictResolver } from "@/components/sync/ConflictResolver";
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -7,6 +8,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       <main className="flex-1 pt-24 px-4 sm:px-8 max-w-7xl mx-auto w-full">
         {children}
       </main>
+      <ConflictResolver />
     </div>
   );
 }

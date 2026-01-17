@@ -2,6 +2,7 @@ export interface ParsedCatch {
     species: string;
     weight: number | null;
     original: string;
+    status: 'clean' | 'draft';
 }
 
 export function parseCatchString(text: string): ParsedCatch {
@@ -74,12 +75,15 @@ export function parseCatchString(text: string): ParsedCatch {
     // Final cleanup of extra whitespace
     species = species.replace(/\s+/g, ' ').trim();
 
-    // Capitalize first letter
-    species = species.charAt(0).toUpperCase() + species.slice(1);
+    // Capitalize first letter of each word
+    species = species.replace(/\b\w/g, c => c.toUpperCase());
+
+    const status: 'clean' | 'draft' = (weight !== null && species.length > 2) ? 'clean' : 'draft';
 
     return {
         species,
         weight,
-        original: text
+        original: text,
+        status
     };
 }

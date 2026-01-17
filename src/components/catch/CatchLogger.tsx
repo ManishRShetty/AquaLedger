@@ -52,15 +52,17 @@ export function CatchLogger() {
 
     // Mutation for saving catch
     const logCatchMutation = useMutation({
-        mutationFn: async (newCatch: { species: string; weight: number; imageBase64?: string | null }) => {
+        mutationFn: async (newCatch: { species: string; weight: number; imageBase64?: string | null; parsingStatus?: 'clean' | 'draft' | 'ai_pending' }) => {
             const { score, rationale } = calculateLocalScore(newCatch.species, newCatch.weight);
 
             await db.catches.add({
                 species: newCatch.species,
                 weight: newCatch.weight,
                 imageBase64: newCatch.imageBase64 || undefined,
+                parsingStatus: newCatch.parsingStatus,
                 timestamp: Date.now(),
                 syncStatus: 'pending',
+                inventoryStatus: 'caught',
                 score,
                 rationale
             });
@@ -86,15 +88,25 @@ export function CatchLogger() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // Allow submit if image is present even if text is empty (Future logic), but for now keep requiring fields or image
-        if ((!species || !weight) && !imageBase64) return;
 
-        // If weight/species missing but image present, we can submit placeholders (Hybrid workflow)
-        // For now, let's allow "Image Only" to be saved with placeholders
+        // Validation: Must have at least species OR image
+        if (!species && !imageBase64) {
+            toast({
+                title: "Incomplete Log",
+                description: "Please provide a species name or take a photo.",
+                variant: "destructive"
+            });
+            return;
+        }
+
+        const isImageOnly = !species && !!imageBase64;
+        const finalSpecies = species || "Analyzing Catch..."; // Placeholder for UI
+
         logCatchMutation.mutate({
-            species: species || "Unknown (Pending AI)",
+            species: finalSpecies,
             weight: weight ? parseFloat(weight) : 0,
-            imageBase64
+            imageBase64,
+            parsingStatus: isImageOnly ? 'ai_pending' : 'clean'
         });
     };
 

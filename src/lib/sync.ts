@@ -48,3 +48,31 @@ export async function processSyncQueue(): Promise<{ synced: number; errors: numb
 
     return { synced: syncedCount, errors: errorCount };
 }
+
+// SIMULATION: Check for server updates that conflict with local data
+// In a real app, this would be a separate "pull" logic
+export async function checkForConflicts(): Promise<void> {
+    // 1% chance to simulate a conflict on a synced item
+    if (Math.random() > 0.3) return;
+
+    const syncedItems = await db.catches.where('syncStatus').equals('synced').toArray();
+    if (syncedItems.length === 0) return;
+
+    const victim = syncedItems[Math.floor(Math.random() * syncedItems.length)];
+
+    // Create a conflict!
+    // Server says weight is different
+    const serverVersion = {
+        ...victim,
+        weight: Number((victim.weight * 1.1).toFixed(2)), // Server says it was heavier!
+        lastUpdated: Date.now() + 1000,
+        species: victim.species + " (Verified)"
+    };
+
+    console.log(`[Sync] Conflict detected for Catch #${victim.id}`);
+
+    await db.catches.update(victim.id!, {
+        syncStatus: 'conflict',
+        serverVersion
+    });
+}

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { processSyncQueue } from '@/lib/sync';
+import { processSyncQueue, checkForConflicts } from '@/lib/sync';
 import { useQueryClient } from '@tanstack/react-query';
 
 export function useSyncLoop() {
@@ -13,6 +13,8 @@ export function useSyncLoop() {
         setIsSyncing(true);
         try {
             const { synced, errors } = await processSyncQueue();
+            await checkForConflicts(); // Run Pull/Conflict check logic
+
             if (synced > 0 || errors > 0) {
                 // Invalidate queries to refresh UI if we had catch lists
                 queryClient.invalidateQueries({ queryKey: ['catches'] });

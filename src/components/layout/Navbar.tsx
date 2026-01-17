@@ -22,6 +22,28 @@ export function Navbar() {
                     </div>
                 </Link>
 
+                {/* Center: Navigation */}
+                <div className="hidden md:flex items-center gap-1 bg-slate-100/50 p-1 rounded-xl border border-slate-200/50">
+                    <Link
+                        href="/"
+                        className={cn(
+                            "px-4 py-1.5 rounded-lg text-sm font-semibold transition-all",
+                            pathname === "/" ? "bg-white text-teal-700 shadow-sm" : "text-slate-600 hover:text-teal-600 hover:bg-white/50"
+                        )}
+                    >
+                        Logbook
+                    </Link>
+                    <Link
+                        href="/inventory"
+                        className={cn(
+                            "px-4 py-1.5 rounded-lg text-sm font-semibold transition-all",
+                            pathname === "/inventory" ? "bg-white text-teal-700 shadow-sm" : "text-slate-600 hover:text-teal-600 hover:bg-white/50"
+                        )}
+                    >
+                        Inventory
+                    </Link>
+                </div>
+
                 {/* Right: Status */}
                 <div className="flex items-center gap-4">
                     <SyncStatus variant="inline" />
